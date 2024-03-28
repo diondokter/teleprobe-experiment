@@ -1,0 +1,14 @@
+auths:
+  - !oidc
+      issuer: https://token.actions.githubusercontent.com
+      rules:
+        - claims:
+            iss: https://token.actions.githubusercontent.com
+            aud: https://github.com/embassy-rs
+            repository: embassy-rs/embassy
+  - !token
+      token: hN6e2msKlqsW9smsjyF5I7xmiuPQij0O
+targets:
+  - name: nrf52840-dk
+    chip: nRF52840_xxAA
+    probe: 1366:1015:000683703433
