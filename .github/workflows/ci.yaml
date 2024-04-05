@@ -8,7 +8,7 @@ on:
   pull_request:
 
 env:
-  TELEPROBE_HOST: "http:/127.0.0.1:8080"
+  TELEPROBE_HOST: "http:/92.68.125.240:6969"
   TELEPROBE_TOKEN: "hN6e2msKlqsW9smsjyF5I7xmiuPQij0O"
 
 jobs:
@@ -22,11 +22,29 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
     steps:
     - uses: actions/checkout@v3
     - uses: dtolnay/rust-toolchain@stable
-    - run: sudo apt-get install libudev-dev
-    - run: cargo install teleprobe --git https://github.com/embassy-rs/teleprobe.git --locked
+
+    - uses: actions/cache@v3
+      id: cache-cargo
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          ./tests/nrf52840/target/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+    - if: steps.cache-cargo.outputs.cache-hit != 'true'
+      run: sudo apt-get install libudev-dev
+    
+    - if: steps.cache-cargo.outputs.cache-hit != 'true'
+      run: cargo install teleprobe --git https://github.com/embassy-rs/teleprobe.git --locked
+    
     - run: cargo run --bin timer
       working-directory: ./tests/nrf52840
 
