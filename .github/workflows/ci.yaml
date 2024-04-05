@@ -1,0 +1,37 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  # Run on any PR
+  pull_request:
+
+env:
+  TELEPROBE_HOST: "http:/127.0.0.1:8080"
+  TELEPROBE_TOKEN: "hN6e2msKlqsW9smsjyF5I7xmiuPQij0O"
+
+jobs:
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: dtolnay/rust-toolchain@stable
+    - run: cargo fmt --all -- --check
+      working-directory: ./tests/nrf52840
+
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: dtolnay/rust-toolchain@stable
+    - run: cargo run --bin timer
+      working-directory: ./tests/nrf52840
+
+  clippy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: dtolnay/rust-toolchain@stable
+    - run: cargo clippy -- -D warnings
+      working-directory: ./tests/nrf52840
