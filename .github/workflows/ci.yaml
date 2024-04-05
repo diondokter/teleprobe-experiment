@@ -1,0 +1,58 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  # Run on any PR
+  pull_request:
+
+env:
+  TELEPROBE_HOST: "http://teleprobe.tweede.golf:6969"
+
+jobs:
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: dtolnay/rust-toolchain@stable
+    - run: cargo fmt --all -- --check
+      working-directory: ./tests/nrf52840
+
+  test:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+    - uses: actions/checkout@v3
+    - uses: dtolnay/rust-toolchain@stable
+
+    - uses: actions/cache@v3
+      id: cache-cargo
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          ./tests/nrf52840/target/
+        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+
+    - if: steps.cache-cargo.outputs.cache-hit != 'true'
+      run: sudo apt-get install libudev-dev
+    
+    - if: steps.cache-cargo.outputs.cache-hit != 'true'
+      run: cargo install teleprobe --git https://github.com/embassy-rs/teleprobe.git --locked
+    
+    - run: cargo run --bin timer
+      env:
+        TELEPROBE_TOKEN: ${{ secrets.TELEPROBE_TOKEN }}
+      working-directory: ./tests/nrf52840
+
+  clippy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: dtolnay/rust-toolchain@stable
+    - run: cargo clippy -- -D warnings
+      working-directory: ./tests/nrf52840

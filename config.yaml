@@ -4,10 +4,10 @@ auths:
       rules:
         - claims:
             iss: https://token.actions.githubusercontent.com
-            aud: https://github.com/embassy-rs
-            repository: embassy-rs/embassy
-  - !token
-      token: hN6e2msKlqsW9smsjyF5I7xmiuPQij0O
+            aud: https://github.com/diondokter
+            repository: diondokter/teleprobe-experiment
+  # - !token
+  #     token: my-very-secret-token
 targets:
   - name: nrf52840-dk
     chip: nRF52840_xxAA
