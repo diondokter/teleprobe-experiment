@@ -25,6 +25,7 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: dtolnay/rust-toolchain@stable
+    - run: cargo install teleprobe --git https://github.com/embassy-rs/teleprobe.git --locked
     - run: cargo run --bin timer
       working-directory: ./tests/nrf52840
 
