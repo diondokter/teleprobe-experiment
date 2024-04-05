@@ -8,7 +8,7 @@ on:
   pull_request:
 
 env:
-  TELEPROBE_HOST: "http:/92.68.125.240:6969"
+  TELEPROBE_HOST: "http://teleprobe.tweede.golf:6969"
 
 jobs:
   fmt:
