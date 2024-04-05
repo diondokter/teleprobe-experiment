@@ -9,7 +9,6 @@ on:
 
 env:
   TELEPROBE_HOST: "http:/92.68.125.240:6969"
-  TELEPROBE_TOKEN: "hN6e2msKlqsW9smsjyF5I7xmiuPQij0O"
 
 jobs:
   fmt:
@@ -46,6 +45,8 @@ jobs:
       run: cargo install teleprobe --git https://github.com/embassy-rs/teleprobe.git --locked
     
     - run: cargo run --bin timer
+      env:
+        TELEPROBE_TOKEN: ${{ secrets.TELEPROBE_TOKEN }}
       working-directory: ./tests/nrf52840
 
   clippy:
