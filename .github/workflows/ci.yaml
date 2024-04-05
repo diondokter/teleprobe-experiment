@@ -43,8 +43,11 @@ jobs:
     
     - if: steps.cache-cargo.outputs.cache-hit != 'true'
       run: cargo install teleprobe --git https://github.com/embassy-rs/teleprobe.git --locked
-    
-    - run: cargo run --bin timer
+
+    - run: cargo build --bin timer
+      working-directory: ./tests/nrf52840
+
+    - run: teleprobe client run -s target/thumbv7em-none-eabi/debug/timer
       env:
         TELEPROBE_TOKEN: ${{ secrets.TELEPROBE_TOKEN }}
       working-directory: ./tests/nrf52840
