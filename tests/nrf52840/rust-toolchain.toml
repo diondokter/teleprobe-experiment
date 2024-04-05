@@ -1,0 +1,6 @@
+[toolchain]
+channel = "stable"
+components = [ "rustfmt" ]
+targets = [
+    "thumbv7em-none-eabi",
+]
